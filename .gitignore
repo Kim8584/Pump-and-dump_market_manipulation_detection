@@ -1,0 +1,18 @@
+# Environments
+pyenv/
+venv/
+.env
+__pycache__/
+
+# Datasets & Large Files
+data/
+pump-and-dump-dataset/
+liquidation_forecast/
+notebooks/
+*.csv
+*.parquet
+*.zip
+*.tar.gz
+
+# System
+.DS_Store
