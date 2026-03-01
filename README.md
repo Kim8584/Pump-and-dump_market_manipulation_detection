@@ -1,50 +1,131 @@
-## Interactive Feature Presentation
+# Crypto Pump-and-Dump Detection Using Machine Learning
+![Project Banner](banner.png)
+## Project Overview
 
-This project includes an interactive, scroll-based infographic for presenting the Pump and Dump & Market Manipulation Detection system architecture.
+Cryptocurrency markets are highly susceptible to coordinated pump-and-dump schemes. These schemes artificially inflate token prices before rapid sell-offs, causing significant market distortion and financial losses.
 
-How to Run the Presentation
+This project builds a machine learning model to detect pump-and-dump events using high-frequency trading data and time-aware validation techniques.
 
-To ensure all interactive charts (Chart.js and Plotly) render correctly, it is recommended to run the file through a local web server rather than opening it directly.
-1. clone this repo and then
+The problem is formulated as a **binary classification task**, where:
 
-1. Using Python (Simplest)
-Open your terminal and run the following command from the root directory:
+- 1 → Pump event  
+- 0 → Normal market behavior  
 
-python -m http.server 8000
+Due to extreme class imbalance, special care was taken in evaluation and modeling.
 
+---
 
-Then, open your browser to:
-http://localhost:8000/presentations/feature.html
+##  Objectives
 
-2. Using VS Code
-If you have the Live Server extension installed:
+### Primary Objective
+Develop a machine learning model capable of detecting cryptocurrency pump events using short time-window trading features.
 
-Right-click presentations/feature.html in the file explorer.
+### Secondary Objectives
+- Handle extreme class imbalance effectively  
+- Compare multiple classification models  
+- Optimize classification threshold  
+- Use time-based validation to prevent data leakage  
+- Evaluate models using precision-recall metrics  
 
-Select "Open with Live Server".
+---
 
-Presentation Controls
+##  Dataset Description
 
-Scrolling: The presentation uses a smooth, continuous scroll with a progress bar at the top.
+The dataset consists of high-frequency cryptocurrency market data at:
 
-Keyboard Navigation: Use the Right/Down Arrow keys to move forward and Left/Up Arrow keys to move backward.
+- 5-second intervals
+- 15-second intervals
+- 25-second intervals
 
-Sidebar Nav: Use the interactive dots on the right side to jump directly to specific technical sections:
+### Key Features
 
-01. Intent Source (Telegram Registry)
+**Volume & Activity**
+- `std_volume`
+- `avg_volume`
+- `std_trades`
 
-02. Market Reality (Binance Trade Data)
+**Price Dynamics**
+- `std_price`
+- `avg_price`
+- `avg_price_max`
 
-03. Feature Engineering (Logic & Normalization)
+**Order Intensity**
+- `std_rush_order`
+- `avg_rush_order`
 
-04. Feature Dictionary (Technical Variable Explanations)
+**Temporal Features**
+- `hour_sin`, `hour_cos`
+- `minute_sin`, `minute_cos`
 
-05. Labeled Dataset (Final ML-Ready Output)
+**Target Variable**
+- `gt` → 1 indicates a pump event
 
-Technical Details Included
+### Class Imbalance
 
-Microsecond Trade Logs: Visualizes raw execution data.
+Pump events represent approximately **0.0657%** of the dataset.
 
-Standard Deviation Analysis: Explains the std_rush_order bot-detection logic.
+This severe imbalance required:
+- Careful model selection
+- Appropriate evaluation metrics
+- Threshold tuning
 
-Radar Signatures: Compares manipulation profiles against organic trading baselines.
+---
+
+##  Modeling Approach
+
+### Models Compared
+- Logistic Regression
+- Random Forest Classifier
+- XGBoost Classifier
+
+### Validation Strategy
+- Time-based train-test split
+- Prevention of temporal leakage
+
+### Evaluation Metrics
+Because pump events are rare, **accuracy was not used** as the primary metric.
+
+Instead, evaluation focused on:
+- Precision (Class 1)
+- Recall (Class 1)
+- F1-Score (Class 1)
+- Precision-Recall tradeoff
+
+---
+
+##  Results
+
+### Logistic Regression
+- Low precision and F1-score
+- Not suitable for rare-event detection in this case
+
+### Random Forest
+- Precision: 0.71
+- Recall: 0.95
+- F1-Score: 0.82
+
+### XGBoost (Selected Model)
+- Precision: 0.79
+- Recall: 0.95
+- F1-Score: 0.87
+
+XGBoost achieved the best balance between detecting pump events and minimizing false alarms.
+
+---
+
+##  Key Findings
+
+- XGBoost is highly effective for rare-event detection in high-frequency crypto markets.
+- Certain tokens appear more vulnerable to pump activity.
+- Accuracy is misleading in imbalanced datasets — precision and recall provide better insight.
+
+---
+
+##  Business Impact
+
+- Enables early detection of market manipulation
+- Supports automated alert systems
+- Reduces exposure to fraudulent price movements
+- Improves market monitoring strategies
+
+---
