@@ -64,3 +64,6 @@ tzdata==2025.2
 uvicorn==0.38.0
 wcwidth==0.2.14
 xgboost==3.2.0
+
+dash
+dash-bootstrap-components
